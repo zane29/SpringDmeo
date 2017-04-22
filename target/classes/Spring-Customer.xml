@@ -1,0 +1,161 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+    <!-- enable autowire -->
+    <context:annotation-config/>
+
+    <context:component-scan base-package="com">
+        <!--所有文件的名称中包含 DAO 或 Service(*Test*, *Services.*) 单词将被检测并在 Spring 容器中注册。-->
+        <!--<context:include-filter type="regex" expression="com.*Test*"/>-->
+        <!--<context:include-filter type="regex" expression="com.yiibai.customer.services.*Service.*" />-->
+        <!--过滤组件 - 不包含-->
+        <!--<context:exclude-filter type="regex" expression="com.yiibai.customer.dao.*DAO.*" />-->
+    </context:component-scan>
+
+    <bean id="springHelloWorldImpl" class="com.service.HelloSpring.impl.SpringHelloWorldImpl">
+        <property name="name" value="I am springHelloWorldImpl"/>
+    </bean>
+
+    <bean id="springHelloWorldImpl2" class="com.service.HelloSpring.impl.SpringHelloWorldImpl">
+        <property name="name" value="I am springHelloWorldImpl2"/>
+    </bean>
+
+    <bean id="strutsHelloWorldImpl" class="com.service.HelloSpring.impl.StrutsHelloWorldImpl">
+        <property name="name" value="I am strutsHelloWorldImpl"/>
+    </bean>
+
+
+
+    <!--<bean id="PropertiesParameter" class="com.PropertiesParameter" scope="prototype">-->
+    <!--<property name="driverClassName" value="${driverClassName}" />-->
+    <!--<property name="url" value="${url}" />-->
+    <!--<property name="username" value="${username}" />-->
+    <!--<property name="password" value="${password}" />-->
+    <!--</bean>-->
+
+
+    <!--如果想有一个新的 “CustomerService”bean 实例，每次调用它的时候，需要使用原型(prototype)来代替。还可以使用注释来定义 bean 的作用域。-->
+    <bean id="helloWorldService" class="com.model.HelloWorldService" scope="prototype">
+        <property name="helloWorld" ref="springHelloWorldImpl"/>
+        <property name="name" value="I am HelloWorldService"/>
+    </bean>
+
+    <bean id="helloWorldService2" class="com.model.HelloWorldService">
+        <constructor-arg value="1000" type="int"/>
+        <constructor-arg value="zhouhaiming" type="java.lang.String"/>
+        <constructor-arg value="广州大学" type="java.lang.String"/>
+    </bean>
+
+    <!--Spring AOP实例-->
+
+    <!--Spring AOP实例 – Advice-->
+    <!--<bean id="BeforeMethodBean" class="com.service.SpringAOP.Advices.BeforeMethod"/>-->
+    <!--<bean id="AfterMethodBean" class="com.service.SpringAOP.Advices.AfterMethod"/>-->
+    <!--<bean id="ThrowExceptionBean" class="com.service.SpringAOP.Advices.ThrowException"/>-->
+    <!--<bean id="AroundMethod" class="com.service.SpringAOP.Advices.AroundMethod"/>-->
+
+    <!--Spring AOP实例 – Advisor-->
+    <!--<bean id="customerCut" class="org.springframework.aop.support.NameMatchMethodPointcut">-->
+        <!--&lt;!&ndash;<property name="mappedName" value="printName" /> &lt;!&ndash;指定拦截的方法名。这里指定连接printName()方法&ndash;&gt;&ndash;&gt;-->
+        <!--<property name="mappedNames">&lt;!&ndash;指定拦截的方法名。这里指定连接printName()和printURL()方法&ndash;&gt;-->
+            <!--<list>-->
+                <!--<value>printName</value>-->
+                <!--&lt;!&ndash;<value>printURL</value>&ndash;&gt;-->
+            <!--</list>-->
+        <!--</property>-->
+    <!--</bean>-->
+    <!--&lt;!&ndash;搭配NameMatchMethodPointcut 一起用&ndash;&gt;-->
+    <!--<bean id="customerAdvisor" class="org.springframework.aop.support.DefaultPointcutAdvisor">-->
+        <!--<property name="pointcut" ref="customerCut"/>-->
+        <!--<property name="advice" ref="AroundMethod"/>-->
+    <!--</bean>-->
+
+    <!--和DefaultPointcutAdvisor类相似，但是单独用，不需要NameMatchMethodPointcut-->
+    <!--<bean id="customerAdvisor2" class="org.springframework.aop.support.RegexpMethodPointcutAdvisor">-->
+        <!--<property name="patterns">&lt;!&ndash;现在，它拦截方法名称中有“URL”关键字的方法。在实践中，可以用它来管理DAO层，声明“.*DAO.*” 拦截所有的DAO类来支持事务。&ndash;&gt;-->
+            <!--<list>-->
+                <!--<value>.*URL.*</value>-->
+                <!--<value>.*Name.*</value>-->
+            <!--</list>-->
+        <!--</property>-->
+        <!--<property name="advice" ref="AroundMethod"/>-->
+    <!--</bean>-->
+    <!--ProxyFactoryBean 不常用-->
+    <!--<bean id="customerServiceProxy" class="org.springframework.aop.framework.ProxyFactoryBean">-->
+        <!--<property name="target" ref="customerService"/>-->
+        <!--<property name="interceptorNames">-->
+            <!--<list>-->
+                <!--&lt;!&ndash;<value>BeforeMethodBean</value>&ndash;&gt;-->
+                <!--&lt;!&ndash;<value>AfterMethodBean</value>&ndash;&gt;-->
+                <!--&lt;!&ndash;<value>ThrowExceptionBean</value>&ndash;&gt;-->
+                <!--&lt;!&ndash;<value>AroundMethod</value>&ndash;&gt;-->
+                <!--&lt;!&ndash;<value>customerAdvisor</value>&ndash;&gt;-->
+                <!--&lt;!&ndash;<value>customerAdvisor</value>&ndash;&gt;-->
+                <!--<value>customerAdvisor2</value>&lt;!&ndash;这个目前有点问题&ndash;&gt;-->
+            <!--</list>-->
+        <!--</property>-->
+    <!--</bean>-->
+
+    <!--    如果想在客户模块，所有的DAO类实现SQL日志支持(提醒)的AOP功能，那么必须手动创建很多代理工厂bean，因此在 bean配置文件可能会泛滥代理类。
+        幸运的是，Spring有两个自动代理创建者来自动创建代理bean。-->
+    <!--  在自动代理机制，ProxyFactoryBean 的升级。只需要创建一个的 BeanNameAutoProxyCreator，并包含所有你的bean(通过bean的名字，或正则表达式名)和“advisor” 作为一个单位。-->
+    <!--   现在，可以通过“CustomerService”的原始名称获取bean, 如果知道这个bean已经代理。-->
+    <!--<bean id="BeanNameAutoProxyCreator" class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">-->
+    <!--<property name="beanNames">-->
+    <!--<list>-->
+    <!--<value>*Service</value>-->
+    <!--</list>-->
+    <!--</property>-->
+    <!--<property name="interceptorNames">-->
+    <!--<list>-->
+    <!--<value>customerAdvisor2</value>-->
+    <!--</list>-->
+    <!--</property>-->
+    <!--</bean>-->
+
+    <!-- 自动代理所有的advisor -->
+<!--    配合Advisor 使用。比如这个使用了RegexpMethodPointcutAdvisor   目前使用了这个功能会导致很多问题 比如注解的类读不到，不能正常赋值-->
+    <!--<bean id="autoProxyCreator" class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"></bean>-->
+
+<!--     启用AspectJ 激活自动代理功能 -->
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+
+    <!--配置数据库-->
+
+    <bean id="customerDAO" class="com.dao.impl.JdbcCustomerDAO">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <bean id="customerDAO2" class="com.dao.impl.JdbcCustomerDAO2">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <bean id="customerDAO3" class="com.dao.impl.JdbcCustomerDAO3">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <bean id="dataSource"
+          class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://localhost:3306/test"/>
+        <property name="username" value="root"/>
+        <property name="password" value="123456"/>
+    </bean>
+
+    <!--<bean id="dataSource2"-->
+          <!--class="org.springframework.jdbc.datasource.DriverManagerDataSource">-->
+        <!--<property name="driverClassName" value="${jdbc.driverClassName}" />-->
+        <!--<property name="url" value="${jdbc.url}" />-->
+        <!--<property name="username" value="${jdbc.username}" />-->
+        <!--<property name="password" value="${jdbc.password}" />-->
+    <!--</bean>-->
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location">
+            <value>database.properties</value>
+        </property>
+    </bean>
+</beans>
