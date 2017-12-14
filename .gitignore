@@ -51,3 +51,4 @@ Temporary Items
 target/*
 *./iml
 /log/*
+/out/*
