@@ -16,10 +16,10 @@ public class AspectMain {
         customerBo.addCustomer();
         String str = customerBo.addCustomerReturnValue();
         System.out.println(str);
-        try {
-            customerBo.addCustomerThrowException();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            customerBo.addCustomerThrowException();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 }
